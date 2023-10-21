@@ -1,4 +1,5 @@
 import time
+import json
 import pickle
 import requests
 from bs4 import BeautifulSoup as bs
@@ -81,3 +82,9 @@ def load_soupdata(filepath: str = "../data/article_soup_data.pkl") -> list[bs]:
     with open(filepath, "rb") as file:
         loaded_soup: list[bs] = pickle.load(file)
     return loaded_soup
+
+def load_article_data(filepath: str = "../data/article_data.json") -> list[bs]:
+    with open(filepath, 'r') as json_file:
+        loaded_serialized_list = json.load(json_file)
+        loaded_soup_list = [bs(item, 'html.parser') for item in loaded_serialized_list]
+    return loaded_soup_list
