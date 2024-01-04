@@ -47,7 +47,7 @@ def get_sentiment(name, title, context, footnote):
     Only rate the citation that is related to the name of authors in the name field. 
 
     Return 1 if the author makes a statement about the quality of the work else 0.
-    Only return integerts 0 and 1, nothing else.
+    Only return integers 0 and 1, nothing else.
     #################Begin data##################################
     Data:
     name: {name}
