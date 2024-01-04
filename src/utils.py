@@ -93,7 +93,7 @@ def get_sentiment(name, title, context, footnote):
     context: The context of the citation
     footnote: The corresponding footnote text of the citation
     #######################End format instructions#################################
-    In the context citations are annotated like this: "[Citation footnotenumber]".
+    In the context citations are annotated like this: "[CITATION-footnotenumber]".
 
     The author makes a statement about the quality of the work if:
     - the author makes a judgemental statement about the quality of a  cited source. 
@@ -111,7 +111,7 @@ def get_sentiment(name, title, context, footnote):
     Only rate the citation that is related to the name of authors in the name field. 
 
     Return 1 if the author makes a statement about the quality of the work else 0.
-    Only return integerts 0 and 1, nothing else.
+    Only return integers 0 and 1, nothing else.
     #################Begin data##################################
     Data:
     name: {name}
