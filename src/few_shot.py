@@ -29,7 +29,7 @@ def get_sentiment(name, title, context, footnote):
     context: The context of the citation
     footnote: The corresponding footnote text of the citation
     #######################End format instructions#################################
-    In the context citations are annotated like this: "[Citation footnotenumber]".
+    In the context citations are annotated like this: "[CITATION-footnotenumber]".
 
     The author makes a statement about the quality of the work if:
     - the author makes a judgemental statement about the quality of a  cited source. 
