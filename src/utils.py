@@ -29,7 +29,7 @@ def get_completion_from_messages(messages:str, model:str="gpt-3.5-turbo", temper
     return response.choices[0].message.content
 
 
-def create_data()->dict[pd.DataFrame]:
+def create_data(previous_context_tokens: int, following_context_tokens: int) -> dict[pd.DataFrame]:
     """
     This function does the following things:
     1. It iterates over all annotated articel files:
@@ -62,7 +62,7 @@ def create_data()->dict[pd.DataFrame]:
                     footnote_number = int(footnote_number)
                 except ValueError as exc:
                     raise ValueError("Could not convert the value to an integer.") from exc
-            context = TextExtraction(article_dict, previous_context_tokens=45, following_context_tokens=45,
+            context = TextExtraction(article_dict, previous_context_tokens=previous_context_tokens, following_context_tokens=following_context_tokens,
                         previous_context_sentences=None, following_context_sentences=None,
                         previous_whole_paragraph=False, following_whole_paragraph=False,
                         till_previous_citation=None, till_following_citation=None
@@ -76,7 +76,7 @@ def create_data()->dict[pd.DataFrame]:
 
     return df_dict
 
-def get_sentiment(name, title, context, footnote):
+def zero_shot(name: str, title: str, context: str, footnote: str) -> str:
     
     system_message = """
     You are an expert in analyzing citations from historical papers. It is your job 
