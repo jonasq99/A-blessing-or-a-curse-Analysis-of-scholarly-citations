@@ -112,9 +112,8 @@ def zero_shot(name: str, title: str, context: str, footnote: str) -> str:
     - the author rates the quality of the work in a positive or negative mannser etc.
     Keywords of opinionated citations:
     - better, failed, argue, however, convincingy, nuanced, vague, fail, overlook, simplification
-    Be very strict when labeling if a statement about the quality of a work is made. Only do so if the criteria match precisely.
 
-    A citation reproduces information if it does not make an explicit statement about the quality of the cited work!
+    A citation reproduces information if it does not make a statement about the quality of the cited work!
 
     Look closely at the text in the footnote! It can be the case that the hint if 
     a citation is neutral or opinionated might be located in the footnote text.
@@ -139,3 +138,6 @@ def zero_shot(name: str, title: str, context: str, footnote: str) -> str:
     ]
     prediction = get_completion_from_messages(messages)
     return prediction
+
+
+# Be very strict when labeling if a statement about the quality of a work is made. Only do so if the criteria match precisely.
