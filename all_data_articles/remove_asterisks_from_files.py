@@ -6,7 +6,7 @@ def rename_files(directory):
         new_filename = filename.replace('*', '')
 
         # remove all special character except - and _
-        new_filename = ''.join(e for e in new_filename if e.isalnum() or e == '-' or e == '_')
+        new_filename = ''.join(e for e in new_filename if e.isalnum() or e == '-' or e == '_' or e == '.')
 
         old_file = os.path.join(directory, filename)
         new_file = os.path.join(directory, new_filename)
