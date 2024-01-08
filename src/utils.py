@@ -111,7 +111,7 @@ def zero_shot(name: str, title: str, context: str, footnote: str) -> str:
     - the author makes a judgemental statement about the quality of a  cited source. 
     - the author rates the quality of the work in a positive or negative mannser etc.
     Keywords of opinionated citations:
-    - better, failed, argue, however, convincingy, nuanced, vague, fail, overlook, simplification
+    - better, failed, argue, however, convincingy, nuanced, vague, fail, overlook, simplification, neglect
 
     A citation reproduces information if it does not make a statement about the quality of the cited work!
 
@@ -141,3 +141,4 @@ def zero_shot(name: str, title: str, context: str, footnote: str) -> str:
 
 
 # Be very strict when labeling if a statement about the quality of a work is made. Only do so if the criteria match precisely.
+# neglect,
