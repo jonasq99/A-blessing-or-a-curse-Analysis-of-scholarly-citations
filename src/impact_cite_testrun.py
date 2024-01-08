@@ -85,5 +85,5 @@ def run_configs(
 
 
 if __name__ == "__main__":
-    configs = [(90, 30), (150, 50), (300, 100), (500, 170)]
-    run_configs(configs)
+    configs_testrun = [(90, 30), (150, 50), (300, 100), (500, 170)]
+    run_configs(configs_testrun)
