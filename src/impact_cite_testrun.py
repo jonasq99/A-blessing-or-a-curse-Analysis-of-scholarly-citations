@@ -13,8 +13,13 @@ from transformers import (
     AutoTokenizer,
     AutoModelForSequenceClassification,
 )
-
+import logging
+from tqdm import tqdm
 from utils import calculate_accuracy_per_label, create_data
+
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
 
 load_dotenv()
 token = os.getenv("HUGGINGFACE_ACCESS_TOKEN")
@@ -53,7 +58,7 @@ def run(preceeding_context: int, suceeding_context: int):
     labels = test_data["labels"]
 
     predictions = []
-    for i in range(len(test_data)):
+    for i in tqdm(range(len(test_data)), desc="Predicting"):
         with torch.no_grad():
             logits = model(torch.tensor([test_data["input_ids"][i]])).logits
         pred = torch.argmax(logits).item()
@@ -77,7 +82,9 @@ def run_configs(
         file.write("Metric, F1, Accuracy_label_0, Accuracy_label_1\n")
 
     for config in configs:
+        logging.info(f"Running configuration: {config}")
         metrics = run(config[0], config[1])
+        logging.info(f"Metrics for configuration {config}: {metrics}")
         with open(file_path, "a", encoding="utf-8") as file:
             file.write(
                 f"{config}, {metrics['f1']}, {metrics['accuracy_0']}, {metrics['accuracy_1']}\n"
@@ -85,5 +92,5 @@ def run_configs(
 
 
 if __name__ == "__main__":
-    configs_testrun = [(90, 30), (150, 50), (300, 100), (500, 170)]
+    configs_testrun = [(90, 30), (300, 100), (500, 170)]
     run_configs(configs_testrun)
