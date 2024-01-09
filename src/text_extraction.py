@@ -22,7 +22,6 @@ def file_finder(file_str: str) -> str:
 
     # extract the title from the row
     title_json = doi_row["Title"].values[0].replace(" ", "_") + ".json"
-    print(title_json)
     title_json = "".join(
         e for e in title_json if e.isalnum() or e == "-" or e == "_" or e == "."
     )

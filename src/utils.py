@@ -141,14 +141,15 @@ def zero_shot(name: str, title: str, context: str, footnote: str) -> str:
 
 
 def calculate_accuracy_per_label(predictions, labels, label_value):
-    # Create a boolean array indicating whether the label matches the specified value
-    label_matches = [l == label_value for l in labels]
-
-    # Extract predictions for instances where the label matches the specified value
-    matched_predictions = [p for i, p in enumerate(predictions) if label_matches[i]]
-
+    label_value_predictions = 0
+    correct_predictions = 0
+    for l, p in zip(labels, predictions):
+        if l == label_value:
+            label_value_predictions += 1
+        if l == label_value and p == l:
+            correct_predictions += 1
     return (
-        sum(matched_predictions) / 100
-        if label_value == 1
-        else (len(matched_predictions) - sum(matched_predictions)) / 100
+        0
+        if label_value_predictions == 0
+        else correct_predictions / label_value_predictions
     )

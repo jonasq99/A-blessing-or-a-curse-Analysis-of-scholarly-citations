@@ -73,7 +73,7 @@ def run(preceeding_context: int, suceeding_context: int):
 
 def run_configs(
     configs: list[tuple[int, int]],
-    file_path: str = "../impact_cite_test_results/run_1.csv",
+    file_path: str = "../impact_cite_test_results/run_2.csv",
 ):
     if os.path.exists(file_path):
         os.remove(file_path)
@@ -92,5 +92,5 @@ def run_configs(
 
 
 if __name__ == "__main__":
-    configs_testrun = [(90, 30), (300, 100), (500, 170)]
+    configs_testrun = [(300, 100)]
     run_configs(configs_testrun)
