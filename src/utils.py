@@ -22,7 +22,9 @@ def get_completion(prompt: str, model: str = "gpt-3.5-turbo") -> str:
 
 
 def get_completion_from_messages(
-    messages: str, model: str = "gpt-3.5-turbo", temperature: int = 0
+    messages: str,
+    model: str = "gpt-3.5-turbo-0125", #"gpt-4-0125-preview",
+    temperature: int = 0
 ) -> str:
     response = client.chat.completions.create(
         model=model,
