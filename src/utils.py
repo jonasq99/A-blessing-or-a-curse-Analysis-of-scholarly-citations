@@ -3,7 +3,7 @@ import pandas as pd
 from openai import OpenAI
 from openai._types import NotGiven, NOT_GIVEN
 
-from text_extraction import file_finder, TextExtraction
+from .text_extraction import file_finder, TextExtraction
 from dotenv import load_dotenv
 from pathlib import Path
 
@@ -25,12 +25,12 @@ def get_completion(prompt: str, model: str = "gpt-3.5-turbo") -> str:
 
 def get_completion_from_messages(
     messages: str,
-    model: str = "gpt-3.5-turbo", #"gpt-4-0125-preview",
+    model: str = "gpt-3.5-turbo",  # "gpt-4-0125-preview",
     temperature: int = 0,
-    max_tokens = NOT_GIVEN,
-    top_p = NOT_GIVEN,
-    frequency_penalty = NOT_GIVEN,
-    presence_penalty = NOT_GIVEN,
+    max_tokens=NOT_GIVEN,
+    top_p=NOT_GIVEN,
+    frequency_penalty=NOT_GIVEN,
+    presence_penalty=NOT_GIVEN,
 ) -> str:
     response = client.chat.completions.create(
         model=model,
