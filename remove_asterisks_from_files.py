@@ -15,5 +15,5 @@ def rename_files(directory):
         print(f"Renamed '{filename}' to '{new_filename}'")
 
 
-directory_path = "."
+directory_path = "./all_data_articles/"
 rename_files(directory_path)
