@@ -1,9 +1,10 @@
 import json
+import math
 import pandas as pd
 from openai import OpenAI
 from openai._types import NotGiven, NOT_GIVEN
 
-from .text_extraction import file_finder, TextExtraction
+# from text_extraction import file_finder, TextExtraction
 from dotenv import load_dotenv
 from pathlib import Path
 
@@ -25,7 +26,7 @@ def get_completion(prompt: str, model: str = "gpt-3.5-turbo") -> str:
 
 def get_completion_from_messages(
     messages: str,
-    model: str = "gpt-3.5-turbo",  # "gpt-4-0125-preview",
+    model: str = "gpt-3.5-turbo-0125",  # "gpt-3.5-turbo-0125",  # "gpt-3.5-turbo",  # "gpt-4-0125-preview",
     temperature: int = 0,
     max_tokens=NOT_GIVEN,
     top_p=NOT_GIVEN,
@@ -44,61 +45,19 @@ def get_completion_from_messages(
     return response.choices[0].message.content
 
 
-def create_data(
-    previous_context_tokens: int, following_context_tokens: int
-) -> dict[pd.DataFrame]:
-    """
-    This function does the following things:
-    1. It iterates over all annotated articel files:
-       For each annotated article we create a pandas df, loop over all rows in its corresponding df object
-    2. We extract generate the citation context and extract the corresponding footnote
-    3. Context and footnotes are added to the df object
-
-    Dependencies:
-    - file_finder
-    - TextExtraction
-    """
-    path_annotations = Path("../data/annotated")
-    path_articles = Path("../all_data_articles")
-    df_dict = {}
-    for filepath in path_annotations.iterdir():
-        df_name = filepath.name
-        df = pd.read_excel(filepath)
-        df_dict[df_name] = df
-        title_json = file_finder(filepath.name)
-        article_path = path_articles / title_json
-        with open(article_path, "r", encoding="utf-8") as file:
-            article_dict = json.load(file)
-        contexts = []
-        footnotes = []
-        for i in range(len(df)):
-            footnote_number = int(df["Footnote"].iloc[i])
-            if not isinstance(footnote_number, int):
-                try:
-                    footnote_number = int(footnote_number)
-                except ValueError as exc:
-                    raise ValueError(
-                        "Could not convert the value to an integer."
-                    ) from exc
-            context = TextExtraction(
-                article_dict,
-                previous_context_tokens=previous_context_tokens,
-                following_context_tokens=following_context_tokens,
-                previous_context_sentences=None,
-                following_context_sentences=None,
-                previous_whole_paragraph=False,
-                following_whole_paragraph=False,
-                till_previous_citation=None,
-                till_following_citation=None,
-                footnote_text=False,
-                footnote_mask=True,
-            ).generate_context(footnote_number)
-            contexts.append(context)
-            footnote = article_dict["footnotes"][str(footnote_number)]
-            footnotes.append(footnote)
-        df["context"] = contexts
-        df["footnote_text"] = footnotes
-    return df_dict
+def get_context(text: str) -> str:
+    context = []
+    tokens = text.split()
+    for token in tokens:
+        if "[MASK]" in token:
+            context = []
+        elif "CITATION" in token:
+            context.append(token)
+            break
+        else:
+            context.append(token)
+    context = " ".join(context)
+    return context
 
 
 def zero_shot(name: str, title: str, context: str, footnote: str) -> str:
@@ -165,3 +124,64 @@ def calculate_accuracy_per_label(predictions, labels, label_value):
         if label_value_predictions == 0
         else correct_predictions / label_value_predictions
     )
+
+
+def few_shot_cot(examples: str, citation: str, title: str, footnote: str) -> str:
+    system_message = f"""
+    You are receiving a citation that can be either neutral or opinionated.  
+    A citation is opinionated if the author makes a statement about the quality of the cited work. 
+    Otherwise it is neutral. You are going to receive a citation and a label. 
+    A citation has a context, a title and a footnote. The citation in the input is marked with a 
+    special token "[CITATION-footnotenumber]" at the end of the citation.
+
+    The author makes a statement about the quality of the work if:
+    - the author makes a judgemental statement about the quality of a  cited source. 
+    - the author rates the quality of the work in a positive or negative mannser etc.
+    Keywords of opinionated citations:
+    - better, failed, argue, however, convincingy, nuanced, vague, fail, overlook, simplification, neglect
+
+    A citation reproduces information and is therefor neutral if it does not make a statement about the quality of the cited work!
+
+
+    Briefly explain why the citation you received is "neutral" or "opinionated" with a response length not exceeding 100 words. 
+    Your answer should focus not on the content of the cited work but on the author's judgement of the cited work or the author of the cited work. 
+    
+    {examples}
+    """
+
+    prompt = f"""
+    Citation: {citation}
+    Title: {title}
+    Footnote: {footnote}
+    Label:
+    Reasoning:
+    """
+    messages = [
+        {"role": "system", "content": system_message},
+        {"role": "user", "content": prompt},
+    ]
+    prediction = get_completion_from_messages(messages)
+    return prediction
+
+
+def get_fewshot_cot_examples(df: pd.DataFrame = None) -> str:
+
+    if df is None:
+        module_dir = (
+            Path(__file__).resolve().parent
+        )  # Get the directory of the current module
+        csv_path = module_dir / "../data/few_shot_examples/fewshot_cot.csv"
+        df = pd.read_csv(csv_path)
+
+    few_shot_examples = ""
+    for i in range(len(df)):
+        try:
+            math.isnan(df["input"][i])
+        except:
+            few_shot_examples += (
+                df["input"][i].replace("\n\n", "\n")
+                + "\nReaoning:\n"
+                + df["output"][i].rstrip("\n")
+                + "\n\n"
+            )
+    return few_shot_examples
