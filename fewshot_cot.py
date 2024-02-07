@@ -5,25 +5,26 @@ from utils import (
     get_context,
     few_shot_cot,
     get_fewshot_cot_examples,
-    get_parseable_json_from_string,
+    get_label,
     filter_label,
     sample_data,
     calculate_accuracy_per_label,
 )
 from dotenv import load_dotenv
-import logging
 from pathlib import Path
 from sklearn.metrics import f1_score
 from tqdm import tqdm
-from tqdm.contrib.logging import logging_redirect_tqdm
-
-LOG = logging.getLogger(__name__)
-logging.basicConfig(level=logging.WARNING)
+import logging
 
 
-def get_precictions(df, failed_prection_counter: int = 3):
+logging.basicConfig(
+    level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s"
+)
+
+
+def get_precictions(df):
     predictions = []
-    for i in range(len(df)):
+    for i in tqdm(range(len(df)), desc="Samples: "):
         # name = df["Authors"].iloc[i]
         title = df["Title"].iloc[i]
         context = get_context(df["context"].iloc[i])
@@ -39,24 +40,8 @@ def get_precictions(df, failed_prection_counter: int = 3):
         # while pred != "0" and pred != "1":
         # print("Retrying prediction...")
         # pred = few_shot_cot(examples = get_fewshot_cot_examples(), citation=context, title=title, footnote=footnote)
-
-        pred = get_parseable_json_from_string(pred)
-
-        if pred is False:
-            for i in range(failed_prection_counter):
-                pred = few_shot_cot(
-                    examples=get_fewshot_cot_examples(),
-                    citation=context,
-                    title=title,
-                    footnote=footnote,
-                )
-                pred = get_parseable_json_from_string(pred)
-                if pred:
-                    break
-
-        predictions.append(pred)
+        logging.info(f"Prediction: {pred}")
         # pred = get_label(pred)
-        print(pred)
         predictions.append(pred)
         # predictions = [int(i) for i in predictions]
     return predictions
@@ -70,3 +55,12 @@ neutral_data = sample_data(filter_label(df_dict, 0))
 df = pd.concat([opinionated_data, neutral_data], ignore_index=True)
 
 y_pred = get_precictions(df)
+y_true = df["Label"].tolist()
+
+# f1 = f1_score(y_pred, y_true)
+# accuracy_label_0 = calculate_accuracy_per_label(y_pred, y_true, label_value=0)
+# accuracy_label_1 = calculate_accuracy_per_label(y_pred, y_true, label_value=1)
+
+# print("F1 score:", f1)
+# print("Accuracy for label 0:", accuracy_label_0)
+# print("Accuracy for label 1:", accuracy_label_1)
