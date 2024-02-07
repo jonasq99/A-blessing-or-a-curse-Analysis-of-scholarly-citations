@@ -10,8 +10,8 @@ def file_finder(file_str: str) -> str:
     """
     This function takes a file name and returns the path to the file in the all_data_articles.
     """
-    title_doi = "../data/titles_doi.csv"
-    folder_path = "../all_data_articles"
+    title_doi = "./data/titles_doi.csv"
+    folder_path = "./all_data_articles"
 
     # extract the doi from the file name
     doi = file_str.split("_")[-1].split(".")[0]

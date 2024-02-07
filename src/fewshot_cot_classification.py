@@ -1,8 +1,8 @@
 import json
 from datetime import datetime
 import pandas as pd
-from data_creator import create_data
-from utils import (
+from .data_creator import create_data
+from .utils import (
     get_context,
     few_shot_cot,
     get_fewshot_cot_examples,
@@ -23,7 +23,7 @@ logging.basicConfig(level=logging.WARNING)
 def results_to_json(metrics: dict[float], description: str = None, path: str = None):
     if path is None:
         path = Path(
-            f"../experiments/fewshot_cot_{datetime.now().strftime('%Y-%m-%d_%H:%M:%S')}.json"
+            f"./experiments/fewshot_cot_{datetime.now().strftime('%Y-%m-%d_%H:%M:%S')}.json"
         )
 
     if description is None:
@@ -37,7 +37,7 @@ def results_to_json(metrics: dict[float], description: str = None, path: str = N
         json.dump(data, json_file, indent=4)
 
 
-def get_precictions(df: pd.DataFrame, failed_prection_counter: int = 3) -> list[int]:
+def get_predictions(df: pd.DataFrame, failed_prection_counter: int = 3) -> list[int]:
     predictions = []
     for i in trange(len(df)):
         title = df["Title"].iloc[i]
@@ -76,7 +76,7 @@ if __name__ == "__main__":
 
     df = pd.concat([opinionated_data, neutral_data], ignore_index=True)
 
-    y_pred = get_precictions(df)
+    y_pred = get_predictions(df)
     y_true = df["Label"].tolist()
 
     f1 = f1_score(y_pred, y_true)

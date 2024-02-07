@@ -22,7 +22,7 @@ logging.basicConfig(level=logging.WARNING)
 def results_to_json_zs(metrics: dict[float], description: str = None, path: str = None):
     if path is None:
         path = Path(
-            f"../experiments/zeroshot_{datetime.now().strftime('%Y-%m-%d_%H:%M:%S')}.json"
+            f"./experiments/zeroshot_{datetime.now().strftime('%Y-%m-%d_%H:%M:%S')}.json"
         )
 
     if description is None:

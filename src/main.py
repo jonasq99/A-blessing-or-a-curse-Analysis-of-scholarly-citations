@@ -5,26 +5,32 @@ import warnings
 
 import pandas as pd
 
-from fewshot_cot import get_precictions
-from information_extraction import information_extraction, extract_citations, tagger_information_extraction
-from text_extraction import TextExtraction
+from .fewshot_cot_classification import get_predictions
+from .information_extraction import (
+    information_extraction,
+    extract_citations,
+    tagger_information_extraction,
+)
+from .text_extraction import TextExtraction
 
 warnings.filterwarnings("ignore")
 
 if len(sys.argv) < 3:
-    print("""Missing information_extraction_method argument. 
+    print(
+        """Missing information_extraction_method argument. 
     
     Usage: python main.py tagger_name filename
     
     information extraction method: anystyle, regex, tagger
     filename: the name of the file in the folder all_data_articles
-    """)
+    """
+    )
     sys.exit(1)
 
 information_extraction_method = sys.argv[1]
 filename = sys.argv[2]
 
-folder_path = "../all_data_articles"
+folder_path = "./all_data_articles"
 
 """
 anystyle -> information_extraction
@@ -46,12 +52,12 @@ elif information_extraction_method == "regex":
 elif information_extraction_method == "tagger":
     from flair.nn import Classifier
 
-    tagger = Classifier.load('ner-ontonotes-large')
+    tagger = Classifier.load("ner-ontonotes-large")
     extraction = tagger_information_extraction(filename, tagger)
 else:
     raise ValueError("Invalid information_extraction_method")
 
-extraction = (sorted(list(extraction), key=lambda x: x[0]))
+extraction = sorted(list(extraction), key=lambda x: x[0])
 print("Finished extracting information.")
 print("=====================================")
 
@@ -110,7 +116,7 @@ few_shot_df["footnote_text"] = footnote_texts
 
 print("Starting predictions")
 
-predictions = get_precictions(few_shot_df)
+predictions = get_predictions(few_shot_df)
 print("Finished predictions")
 print("=====================================")
 
@@ -121,9 +127,14 @@ result_df["author"] = authors
 result_df["title"] = titles
 result_df["label"] = predictions
 
-result_folder = os.path.join(os.path.join("../results", information_extraction_method))
+result_folder = os.path.join(os.path.join("./results", information_extraction_method))
 if not os.path.exists(result_folder):
     os.makedirs(result_folder, exist_ok=True)
 
-result_df.to_csv(os.path.join("../results", information_extraction_method, filename.replace(".json", ".csv")), index=False)
+result_df.to_csv(
+    os.path.join(
+        "./results", information_extraction_method, filename.replace(".json", ".csv")
+    ),
+    index=False,
+)
 print(f"Stored result file in {result_folder}")

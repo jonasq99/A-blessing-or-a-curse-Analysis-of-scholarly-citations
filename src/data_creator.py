@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 import pandas as pd
-from text_extraction import file_finder, TextExtraction
+from .text_extraction import file_finder, TextExtraction
 
 
 def create_data(
@@ -18,8 +18,9 @@ def create_data(
     - file_finder
     - TextExtraction
     """
-    path_annotations = Path("../data/annotated")
-    path_articles = Path("../all_data_articles")
+
+    path_annotations = Path("./data/annotated")
+    path_articles = Path("./all_data_articles")
     df_dict = {}
     for filepath in path_annotations.iterdir():
         df_name = filepath.name
