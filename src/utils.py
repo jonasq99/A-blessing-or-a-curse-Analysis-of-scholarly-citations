@@ -10,17 +10,6 @@ load_dotenv()
 client = OpenAI()
 
 
-def get_completion(prompt: str, model: str = "gpt-3.5-turbo") -> str:
-    messages = [{"role": "user", "content": prompt}]
-    response = client.chat.completions.create(
-        model=model,
-        messages=messages,
-        temperature=0,
-    )
-
-    return response.choices[0].message.content
-
-
 def get_completion_from_messages(
     messages: str,
     model: str = "gpt-3.5-turbo-0125",  # "gpt-3.5-turbo-0125",  # "gpt-3.5-turbo",  # "gpt-4-0125-preview",
@@ -108,21 +97,6 @@ def zero_shot(name: str, title: str, context: str, footnote: str) -> str:
     ]
     prediction = get_completion_from_messages(messages)
     return prediction
-
-
-# def calculate_accuracy_per_label(predictions, labels, label_value):
-# label_value_predictions = 0
-# correct_predictions = 0
-# for l, p in zip(labels, predictions):
-# if l == label_value:
-# label_value_predictions += 1
-# if l == label_value and p == l:
-# correct_predictions += 1
-# return (
-# 0
-# if label_value_predictions == 0
-# else correct_predictions / label_value_predictions
-# )
 
 
 def few_shot_cot(examples: str, citation: str, title: str, footnote: str) -> str:
