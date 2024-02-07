@@ -1,4 +1,0 @@
-Metric, Configuration1, Configuration2, Value
-metric1, 30, 20, 0.95
-metric2, 30, 20, 123
-metric3, 30, 20, 42.5
