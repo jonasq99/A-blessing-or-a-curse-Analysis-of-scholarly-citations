@@ -4,6 +4,7 @@ import pickle
 import requests
 from bs4 import BeautifulSoup as bs
 
+
 def get_footnotes(soup: bs) -> dict[str, str]:
     """
     Extracts footnotes from a given Beautiful Soup element of articles from 
@@ -17,7 +18,8 @@ def get_footnotes(soup: bs) -> dict[str, str]:
     footnote_contents: list[bs] = soup.find_all('div', attrs={'class': 'footnote-content'})
     if len(footnote_labels) != len(footnote_contents):
         raise ValueError('footnote_labels and footnote_contents have different lengths')
-    footnotes: dict[str, str] = {label.get_text(strip=True): content.get_text(strip=True) for label, content in zip(footnote_labels, footnote_contents)}
+    footnotes: dict[str, str] = {label.get_text(strip=True): content.get_text(strip=True) for label, content in
+                                 zip(footnote_labels, footnote_contents)}
     return footnotes
 
 
@@ -37,15 +39,16 @@ def get_soup_elements(url: str, headers: dict[str, str] = None) -> bs:
         headers: dict[str, str] = {
             'User-Agent': 'Mozilla/5.0 (iPad; CPU OS 12_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148'}
     try:
-        response: requests.models.Response = requests.get(url, headers = headers)
+        response: requests.models.Response = requests.get(url, headers=headers)
         response.raise_for_status()
-        soup: bs = bs(response.text, features = 'html.parser')
+        soup: bs = bs(response.text, features='html.parser')
         return soup
     except requests.exceptions.HTTPError as error:
         raise Exception(f"An error occurred during the request: {error}")
-    
 
-def scraper(links: list[str], pause: int = 10, write_to_file: bool = False, filepath:str = "../data/article_soup_data.pkl") -> list[bs]:
+
+def scraper(links: list[str], pause: int = 10, write_to_file: bool = False,
+            filepath: str = "../data/article_soup_data.pkl") -> list[bs]:
     """
     Scrapes web pages, extracts HTML content, and optionally saves it to a file.
 
@@ -71,6 +74,7 @@ def scraper(links: list[str], pause: int = 10, write_to_file: bool = False, file
             pickle.dump(soup_data, file)
     return soup_data
 
+
 def load_soupdata(filepath: str = "../data/article_soup_data.pkl") -> list[bs]:
     """
     Load previously saved BeautifulSoup data from a file.
@@ -82,6 +86,7 @@ def load_soupdata(filepath: str = "../data/article_soup_data.pkl") -> list[bs]:
     with open(filepath, "rb") as file:
         loaded_soup: list[bs] = pickle.load(file)
     return loaded_soup
+
 
 def load_article_data(filepath: str = "../data/article_data.json") -> list[bs]:
     with open(filepath, 'r') as json_file:
