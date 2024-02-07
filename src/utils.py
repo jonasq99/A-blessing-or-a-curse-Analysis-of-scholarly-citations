@@ -31,6 +31,7 @@ def get_completion_from_messages(
     top_p=NOT_GIVEN,
     frequency_penalty=NOT_GIVEN,
     presence_penalty=NOT_GIVEN,
+    seed: int = 42,
 ) -> str:
     response = client.chat.completions.create(
         model=model,
@@ -40,6 +41,7 @@ def get_completion_from_messages(
         top_p=top_p,
         frequency_penalty=frequency_penalty,
         presence_penalty=presence_penalty,
+        seed=seed,
     )
     return response.choices[0].message.content
 
@@ -195,7 +197,16 @@ def get_parseable_json_from_string(output_str: str) -> Union[dict, bool]:
     try:
         return json.loads(output_str)
     except json.decoder.JSONDecodeError:
-        return False
+        return None
+
+
+def get_label(model_output_dict: dict) -> int:
+    if model_output_dict["label"] == "neutral":
+        return 0
+    elif model_output_dict["label"] == "opinionated":
+        return 1
+    else:
+        return None
 
 
 def filter_label(dataframes_dict: dict[pd.DataFrame], label: int) -> pd.DataFrame:
