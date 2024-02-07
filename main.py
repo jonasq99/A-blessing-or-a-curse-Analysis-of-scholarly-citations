@@ -1,10 +1,10 @@
 import sys
-import pandas as pd
 import warnings
+
+from src.information_extraction import information_extraction, extract_citations, tagger_information_extraction
 
 warnings.filterwarnings("ignore")
 
-from src.information_extraction import information_extraction, extract_citations, tagger_information_extraction
 
 if len(sys.argv) < 3:
     print("""Missing information_extraction_method argument. 
@@ -33,6 +33,7 @@ elif information_extraction_method == "regex":
     extraction = extract_citations(filename, "all_data_articles")
 elif information_extraction_method == "tagger":
     from flair.nn import Classifier
+
     tagger = Classifier.load('ner-ontonotes-large')
     extraction = tagger_information_extraction(filename, tagger, "all_data_articles")
 else:

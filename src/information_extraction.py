@@ -257,8 +257,6 @@ def extract_citations(file_path: str, path="../all_data_articles") -> set:
     return citations
 
 
-# TODO: write a function that extracts the author and title from the footnote using a tagger (i.e. flair)
-
 def tagger_information_extraction(file_path: str, tagger, path="../all_data_articles") -> set:
     file_path = os.path.join(path, file_path)
     article = json.load(open(file_path, "r"))
