@@ -148,7 +148,7 @@ def scrape_all(url):
 
 
 def save_data(data):
-    path = "all_data_articles/" + data["title"].replace(" ", "_") + ".json"
+    path = "all_data_articles/" + data["title"].repace("*", "").replace(" ", "_") + ".json"
     with open(path, "w") as f:
         json.dump(data, f, indent=4)
 
