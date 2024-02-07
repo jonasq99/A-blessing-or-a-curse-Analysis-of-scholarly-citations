@@ -6,6 +6,7 @@ from src.utils import get_context
 from src.data_creator import create_data
 
 
+# decorator so that pytest runs only this test, used for debugging repo structure, old tests moved to broken_tests folder for debugging
 @pytest.mark.correct
 def test_get_context():
     # Test case 1: No [MASK], no succeeding context
