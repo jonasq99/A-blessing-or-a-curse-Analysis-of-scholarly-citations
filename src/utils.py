@@ -1,6 +1,4 @@
-import json
 import math
-from typing import Union
 import pandas as pd
 from openai import OpenAI
 from openai._types import NotGiven, NOT_GIVEN
@@ -146,11 +144,6 @@ def few_shot_cot(examples: str, citation: str, title: str, footnote: str) -> str
 
     Briefly explain why the citation you received is "neutral" or "opinionated" with a response length not exceeding 100 words. 
     Your answer should focus not on the content of the cited work but on the author's judgement of the cited work or the author of the cited work.
-    Reurn your answer in JSON format and nothing else:
-    {{
-    "label": "your label here",
-    "reasoning": "Your explanation here"
-    }}
 
     {examples}
     """
@@ -191,22 +184,6 @@ def get_fewshot_cot_examples(df: pd.DataFrame = None) -> str:
                 + "\n\n"
             )
     return few_shot_examples
-
-
-def get_parseable_json_from_string(output_str: str) -> Union[dict, bool]:
-    try:
-        return json.loads(output_str)
-    except json.decoder.JSONDecodeError:
-        return None
-
-
-def get_label(model_output_dict: dict) -> int:
-    if model_output_dict["label"] == "neutral":
-        return 0
-    elif model_output_dict["label"] == "opinionated":
-        return 1
-    else:
-        return None
 
 
 def filter_label(dataframes_dict: dict[pd.DataFrame], label: int) -> pd.DataFrame:
@@ -258,3 +235,22 @@ def calculate_accuracy_per_label(predictions, labels, label_value: int) -> float
         if label_value == 1
         else (len(matched_predictions) - sum(matched_predictions)) / 100
     )
+
+
+def llm_label_parser(model_output: str) -> int:
+    system_message = """
+    You are going to receive a text and you have to determine if the model output is a neutral or opinionated citation.
+    If the text specifies that the citation is neutral, return 0 and nothing else.
+    If the text specifies that the citation is opinionated, return 1 and nothing else.
+    """
+    messages = [
+        {"role": "system", "content": system_message},
+        {"role": "user", "content": model_output},
+    ]
+    label = get_completion_from_messages(messages)
+
+    try:
+        label = int(label)
+        return label
+    except ValueError:
+        return None

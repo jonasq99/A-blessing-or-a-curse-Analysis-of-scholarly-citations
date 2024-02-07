@@ -6,11 +6,10 @@ from utils import (
     get_context,
     few_shot_cot,
     get_fewshot_cot_examples,
-    get_parseable_json_from_string,
     filter_label,
     sample_data,
     calculate_accuracy_per_label,
-    get_label,
+    llm_label_parser,
 )
 import logging
 from pathlib import Path
@@ -38,15 +37,13 @@ def results_to_json(metrics: dict[float], description: str = None, path: str = N
         json.dump(data, json_file, indent=4)
 
 
-def get_precictions(
-    df: pd.DataFrame, failed_prection_counter: int = 3
-) -> list[tuple[int]]:
+def get_precictions(df: pd.DataFrame, failed_prection_counter: int = 3) -> list[int]:
     predictions = []
     for i in trange(len(df)):
         title = df["Title"].iloc[i]
         context = get_context(df["context"].iloc[i])
         footnote = df["footnote_text"].iloc[i]
-        # pred = context_sentiment(context)
+
         pred = few_shot_cot(
             examples=get_fewshot_cot_examples(),
             citation=context,
@@ -54,8 +51,7 @@ def get_precictions(
             footnote=footnote,
         )
 
-        pred = get_parseable_json_from_string(pred)
-
+        pred = llm_label_parser(pred)
         if pred is None:
             for i in range(failed_prection_counter):
                 pred = few_shot_cot(
@@ -64,11 +60,9 @@ def get_precictions(
                     title=title,
                     footnote=footnote,
                 )
-                pred = get_parseable_json_from_string(pred)
                 if pred:
                     break
 
-        pred = get_label(pred)
         predictions.append(pred)
     return predictions
 
