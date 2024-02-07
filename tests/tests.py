@@ -7,3 +7,4 @@ import os
 
 from src.utils import get_completion
 from src.data_creator import create_data
+from src.synthetic_data_generation import create_opinionated

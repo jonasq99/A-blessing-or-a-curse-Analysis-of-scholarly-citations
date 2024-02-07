@@ -1,13 +1,7 @@
 import os
-import numpy as np
-import pandas as pd
 from sklearn.metrics import f1_score
-import matplotlib.pyplot as plt
-
 import torch
-import torch.nn as nn
-
-from datasets import DatasetDict, Dataset, load_dataset, concatenate_datasets
+from datasets import DatasetDict, Dataset, concatenate_datasets
 from dotenv import load_dotenv
 from transformers import (
     AutoTokenizer,
@@ -15,7 +9,8 @@ from transformers import (
 )
 import logging
 from tqdm import tqdm
-from utils import calculate_accuracy_per_label, create_data
+from data_creator import create_data
+from utils import calculate_accuracy_per_label
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
