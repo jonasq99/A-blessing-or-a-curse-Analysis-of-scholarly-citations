@@ -25,6 +25,11 @@ regex -> extract_citations
 tagger -> tagger_information_extraction
 """
 
+print("Information extraction method: ", information_extraction_method)
+print("Filename: ", filename)
+print("=====================================")
+print("Extracting information...")
+
 extraction = None
 
 if information_extraction_method == "anystyle":
@@ -39,4 +44,10 @@ elif information_extraction_method == "tagger":
 else:
     raise ValueError("Invalid information_extraction_method")
 
-print(extraction)
+extraction = (sorted(list(extraction), key=lambda x: x[0]))
+print("Finished extracting information.")
+print("=====================================")
+
+print(extraction[0])
+
+
