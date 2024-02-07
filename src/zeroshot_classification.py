@@ -1,8 +1,8 @@
 import json
 from datetime import datetime
 import pandas as pd
-from data_creator import create_data
-from utils import (
+from .data_creator import create_data
+from .utils import (
     get_context,
     zero_shot,
     filter_label,

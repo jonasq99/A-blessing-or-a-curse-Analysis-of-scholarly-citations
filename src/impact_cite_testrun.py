@@ -9,8 +9,8 @@ from transformers import (
 )
 import logging
 from tqdm import tqdm
-from data_creator import create_data
-from utils import calculate_accuracy_per_label
+from .data_creator import create_data
+from .utils import calculate_accuracy_per_label
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"

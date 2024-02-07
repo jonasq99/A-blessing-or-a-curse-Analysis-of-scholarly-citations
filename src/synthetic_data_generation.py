@@ -1,7 +1,6 @@
 import os.path
-from utils import get_completion_from_messages
-from text_extraction import TextExtraction
-from synthetic_data_generation import create_opinionated
+from .utils import get_completion_from_messages
+from .text_extraction import TextExtraction
 import json
 import pandas as pd
 from tqdm import tqdm
