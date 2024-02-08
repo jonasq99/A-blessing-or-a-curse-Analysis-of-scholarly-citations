@@ -4,6 +4,17 @@ import pandas as pd
 from .text_extraction import file_finder, TextExtraction
 
 
+def footnote_to_int(footnote_number) -> int:
+    if not isinstance(footnote_number, int):
+        try:
+            footnote_number = int(footnote_number)
+        except ValueError as exc:
+            raise ValueError("Could not convert the value to an integer.") from exc
+        except TypeError as exc:
+            raise TypeError("The value is not a string or an integer.") from exc
+    return footnote_number
+
+
 def create_data(
     previous_context_tokens: int, following_context_tokens: int
 ) -> dict[pd.DataFrame]:
@@ -33,14 +44,8 @@ def create_data(
         contexts = []
         footnotes = []
         for i in range(len(df)):
-            footnote_number = int(df["Footnote"].iloc[i])
-            if not isinstance(footnote_number, int):
-                try:
-                    footnote_number = int(footnote_number)
-                except ValueError as exc:
-                    raise ValueError(
-                        "Could not convert the value to an integer."
-                    ) from exc
+            footnote_number = df["Footnote"].iloc[i]
+            footnote_number = footnote_to_int(footnote_number)
             context = TextExtraction(
                 article_dict,
                 previous_context_tokens=previous_context_tokens,
