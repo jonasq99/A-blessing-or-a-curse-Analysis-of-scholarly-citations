@@ -27,7 +27,7 @@ def mock_soup():
     soup = BeautifulSoup(html_content, "html.parser")
     return soup
 
-
+@pytest.mark.correct
 def test_scrape_article(mock_soup):
     # Call the function with the mock BeautifulSoup object
     result, citations = scrape_article(mock_soup, "example_url")
