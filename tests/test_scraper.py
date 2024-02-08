@@ -34,8 +34,7 @@ def test_scrape_article(mock_soup):
     
     # Define the expected result and citations
     expected_result = "[CITATION-1] This is some text with a citation.[CITATION-2] Another paragraph with a different citation."
-    expected_citations = [2] # besser Liste aller citations und nicht nur letzten Loop durchlauf: dann [1, 2]
-    #citations wird in jedem loop neu deklariert, wäre besser es vorher direkt auch bei result zu deklarieren
+    expected_citations = [1, 2] # or [1], depends on how to put citation variable in 
 
     # Compare the actual result and citations with the expected ones
     assert result == expected_result
