@@ -4,6 +4,7 @@ from openai import OpenAI
 from openai._types import NotGiven, NOT_GIVEN
 from dotenv import load_dotenv
 from pathlib import Path
+from sklearn.metrics import recall_score
 
 load_dotenv()
 
@@ -150,7 +151,7 @@ def get_fewshot_cot_examples(df: pd.DataFrame = None) -> str:
     for i in range(len(df)):
         try:
             math.isnan(df["input"][i])
-        except:
+        except TypeError:
             few_shot_examples += (
                 df["input"][i].replace("\n\n", "\n")
                 + "\nReaoning:\n"
@@ -175,8 +176,10 @@ def filter_label(dataframes_dict: dict[pd.DataFrame], label: int) -> pd.DataFram
             filtered_df = df[df["Label"] == label]
 
             filtered_dataframes.append(filtered_df)
-
-    result_df = pd.concat(filtered_dataframes, ignore_index=True)
+    try:
+        result_df = pd.concat(filtered_dataframes, ignore_index=True)
+    except ValueError:
+        result_df = pd.DataFrame()
 
     return result_df
 
@@ -198,17 +201,13 @@ def calculate_accuracy_per_label(predictions, labels, label_value: int) -> float
     ourtput:
         float: accuracy for the specified label
     """
-    # Create a boolean array indicating whether the label matches the specified value
-    label_matches = [l == label_value for l in labels]
-
-    # Extract predictions for instances where the label matches the specified value
-    matched_predictions = [p for i, p in enumerate(predictions) if label_matches[i]]
-
-    return (
-        sum(matched_predictions) / 100
-        if label_value == 1
-        else (len(matched_predictions) - sum(matched_predictions)) / 100
-    )
+    if label_value == 1:
+        opposite_label = 0
+    else:
+        opposite_label = 1
+    y_pred = [opposite_label if p is None else p for p in predictions]
+    y_true = [opposite_label if l is None else l for l in labels]
+    return recall_score(y_true, y_pred, pos_label=label_value)
 
 
 def llm_label_parser(model_output: str) -> int:
