@@ -17,7 +17,7 @@
    This file contains the results of the analysis, hence the footnote number, author, title and the prediction.
 
 ## Running individual scripts
-Individual scripts should be executed with the -m option since the project uses relative imports
+Individual scripts should be executed with the -m option since the project uses relative imports.  
 For example:
 ```bash
    python -m src.fewshot_cot_classification
