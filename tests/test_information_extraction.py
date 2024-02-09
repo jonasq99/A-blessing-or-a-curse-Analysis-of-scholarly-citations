@@ -1,3 +1,6 @@
+import json
+import pandas as pd
+import pytest
 from src.information_extraction import (
     load_annotations,
     format_author_name,
@@ -9,12 +12,6 @@ from src.information_extraction import (
     extract_citations,
     tagger_information_extraction,
 )
-
-# TODO: write unit tests for all functions except calculate_similarity (all imported functions)
-# file_finder: exact same function also in text_extraction, so maybe better put it in own file (with only one test), so that there is no repition
-
-import pandas as pd
-import pytest
 
 
 @pytest.fixture
@@ -174,4 +171,46 @@ def test_evaluate_extraction():
     assert precision == 1.0
     assert f_score == 0.8571428571428571
 
-    # don't know if we want to evaluate also the calculate_similarity function, in that case alter strings of author/ title
+
+@pytest.mark.correct
+def test_extract_citations(tmp_path):
+    # Create a sample JSON file
+    file_path = tmp_path / "sample.json"
+    article = {
+        "footnotes": {
+            "1": "Author 1, Title 1 (location, 1999); Author 2, Title 2 (location, 1999).",
+            "2": "Author 3, Title 3 (location, 1999).",
+            "3": "Author 4, Title 4 (location, 1999).",
+        }
+    }
+    with open(file_path, "w") as f:
+        json.dump(article, f)
+
+    # Test extract_citations function
+    result_citations = extract_citations(str(file_path), path=str(tmp_path))
+    expected_citations = {
+        (1, "Author 1", "Title 1 "),
+        (1, "Author 2", "Title 2 "),
+        (2, "Author 3", "Title 3 "),
+        (3, "Author 4", "Title 4 "),
+    }
+    assert result_citations == expected_citations
+
+    # test if footnote is ibid
+    article = {
+        "footnotes": {
+            "1": "Author 1, Title 1 (location, 1999).",
+            "2": "Ibid",
+            "3": "Author 2, Title 2 (location, 1999).",
+        }
+    }
+    with open(file_path, "w") as f:
+        json.dump(article, f)
+
+    result_citations = extract_citations(str(file_path), path=str(tmp_path))
+    expected_citations = {
+        (1, "Author 1", "Title 1 "),
+        (2, "Author 1", "Title 1 "),
+        (3, "Author 2", "Title 2 "),
+    }
+    assert result_citations == expected_citations
