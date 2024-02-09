@@ -22,3 +22,16 @@ For example:
 ```bash
    python -m src.fewshot_cot_classification
    ```
+
+## Prerequisites for Anystyle
+1. Download and install Ruby. You can find more information for your operating system here: https://www.ruby-lang.org/en/downloads/. Usually, RubyGem should be automatically installed with Ruby. If not, please visit https://rubygems.org/pages/download for installation instructions.
+2. Install Anystyle by executing:
+    ```bash
+    gem install anystyle
+    ```
+   In some cases, you may need admin rights to install Anystyle. In this case, you can use the following command (for Unix-based systems):
+    ```bash
+    sudo gem install anystyle
+    ```
+
+The Anystyle ruby script is automatically executed by the python code when the Anystyle method is chosen.

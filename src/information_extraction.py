@@ -270,7 +270,7 @@ def tagger_information_extraction(
 
     for footnote_number, footnote_text in tqdm(article["footnotes"].items()):
         # If the footnote is ibid, use the previous footnote
-        if footnote_text.startswith("Ibid")
+        if footnote_text.startswith("Ibid"):
             footnote_text = prev_footnote
 
         prev_footnote = footnote_text
