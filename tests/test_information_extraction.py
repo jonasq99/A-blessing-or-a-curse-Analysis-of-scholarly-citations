@@ -28,7 +28,6 @@ def sample_annotation_file(tmp_path):
     return str(file_path)
 
 
-@pytest.mark.correct
 def test_load_annotations(sample_annotation_file):
     df = load_annotations(sample_annotation_file)
     expected_df = pd.DataFrame(
@@ -42,7 +41,6 @@ def test_load_annotations(sample_annotation_file):
     pd.testing.assert_frame_equal(df, expected_df)
 
 
-@pytest.mark.correct
 def test_format_author_name():
     # Test format_author_name function
     result = format_author_name("John Doe")
@@ -52,7 +50,6 @@ def test_format_author_name():
     assert format_author_name("John Doe and Jane Doe") == "Doe, John and Doe, Jane"
 
 
-@pytest.mark.correct
 def test_df_to_triplets():
     # Test df_to_triplets function
     df = pd.DataFrame(
@@ -67,7 +64,6 @@ def test_df_to_triplets():
     assert result_triplets == expected_triplets
 
 
-@pytest.mark.correct
 def test_dict_to_triplets():
     # Test dict_to_triplets function
     extraction_dict = {1: [("Author 1", "Title 1")], 2: [("Author 2", "Title 2")]}
@@ -76,7 +72,6 @@ def test_dict_to_triplets():
     assert result_triplets == expected_triplets
 
 
-@pytest.mark.correct
 def test_calculate_scores():
     sample_triplets = {
         ("1", "Author 1", "Title 1"),
@@ -124,7 +119,6 @@ def test_calculate_scores():
     assert f_score == 0.5714285714285715
 
 
-@pytest.mark.correct
 def test_evaluate_extraction():
     sample_triplets = {
         ("1", "Author 1", "Title 1"),
@@ -172,7 +166,6 @@ def test_evaluate_extraction():
     assert f_score == 0.8571428571428571
 
 
-@pytest.mark.correct
 def test_extract_citations(tmp_path):
     # Create a sample JSON file
     file_path = tmp_path / "sample.json"

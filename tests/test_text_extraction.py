@@ -2,7 +2,6 @@ import pytest
 from src.text_extraction import TextExtraction
 
 
-@pytest.mark.correct
 def test_find_following_token_index():
     # Test find_following_token_index method
     sample_article_dict = {
@@ -37,7 +36,6 @@ def test_find_following_token_index():
     assert index == len(sample_article_dict["article"])
 
 
-@pytest.mark.correct
 def test_find_previous_token_index():
     # Test find_previous_token_index method
     sample_article_dict = {
@@ -72,7 +70,6 @@ def test_find_previous_token_index():
     assert index == 0
 
 
-@pytest.mark.correct
 def test_replace_citations():
     # Test replacing sigle citation
     text = "Citation 1.[CITATION-1] Citation 2.[CITATION-2] This article"
@@ -99,7 +96,6 @@ def test_replace_citations():
     assert replaced_text == expected_replaced_text
 
 
-@pytest.mark.correct
 def test_generate_context():
     sample_article_dict = {
         "article": "Lorem ipsum [CITATION-1] dolor sit amet, [CITATION-2] consectetur adipiscing elit.",

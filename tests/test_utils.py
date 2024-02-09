@@ -12,7 +12,6 @@ from src.utils import (
 
 
 # decorator so that pytest runs only this test, used for debugging repo structure, old tests moved to broken_tests folder for debugging
-@pytest.mark.correct
 def test_get_context():
     # Test case 1: No [MASK], succeeding context
     text = "Wilhelm II's condemnation of Cecil Rhodes as a 'monstrous villain' in response to the Jameson Raid into Transvaal [CITATION-2] reveals his strong disapproval of Rhodes' actions. This suggests that Wilhelm II held a negative opinion towards Rhodes and his involvement in the scandal."
@@ -32,7 +31,6 @@ def test_get_context():
     assert get_context(text) == expected_context
 
 
-@pytest.mark.correct
 def test_get_fewshot_cot_examples():
     # Test case 1: Test with provided DataFrame
     df = pd.DataFrame(
@@ -49,7 +47,6 @@ def test_get_fewshot_cot_examples():
     assert get_fewshot_cot_examples(df) == expected_output
 
 
-@pytest.mark.correct
 def test_filter_label():
     # Test case 1: Filter label 1 from a single dataframe
     df = pd.DataFrame({"Label": [1, 0, 0]})
@@ -81,7 +78,6 @@ def test_filter_label():
     assert filter_label(dataframes_dict, label).equals(expected_result)
 
 
-@pytest.mark.correct
 def test_calculate_accuracy_per_label():
     # testing for None value in predictions
     predictions = [1, 0, 1, 0, 1, None]
@@ -114,7 +110,6 @@ def test_calculate_accuracy_per_label():
     )
 
 
-@pytest.mark.correct
 @patch("src.utils.get_completion_from_messages")
 def test_llm_label_parser(mock_get_completion_from_messages):
     # Test case 1: Opinionated citation
@@ -142,7 +137,6 @@ def test_llm_label_parser(mock_get_completion_from_messages):
     )
 
 
-@pytest.mark.correct
 def test_file_finder():
     # Test case 1: File found
     file_str = "Labels - https___doi.org_10.1093_ehr_cead103.xlsx"

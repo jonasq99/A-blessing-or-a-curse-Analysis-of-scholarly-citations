@@ -2,7 +2,6 @@ import pytest
 from src.data_creator import footnote_to_int
 
 
-@pytest.mark.correct
 def test_footnote_to_int():
     # Test with integer value
     assert footnote_to_int(5) == 5
