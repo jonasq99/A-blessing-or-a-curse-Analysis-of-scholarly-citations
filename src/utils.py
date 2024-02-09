@@ -1,4 +1,6 @@
+import json
 import math
+import os
 import pandas as pd
 from openai import OpenAI
 from openai._types import NotGiven, NOT_GIVEN
@@ -227,3 +229,34 @@ def llm_label_parser(model_output: str) -> int:
         return label
     except ValueError:
         return None
+
+
+def file_finder(file_str: str) -> str:
+    """
+    This function takes a file name and returns the path to the file in the all_data_articles.
+    """
+    title_doi = "./data/titles_doi.csv"
+    folder_path = "./all_data_articles"
+
+    try:
+        # extract the doi from the file name
+        doi = file_str.split("_")[-1].split(".")[0]
+
+        # find the row in the csv file where the doi column ends with the doi
+        df = pd.read_csv(title_doi)
+        doi_row = df[df["DOI"].str.endswith(doi)]
+
+        # extract the title from the row
+        title_json = doi_row["Title"].values[0].replace(" ", "_") + ".json"
+        title_json = "".join(
+            e for e in title_json if e.isalnum() or e == "-" or e == "_" or e == "."
+        )
+
+        for filename in os.listdir(folder_path):
+            if filename.endswith(".json") and filename.startswith(
+                title_json[: int(len(title_json) / 3)]
+            ):
+                return filename
+
+    except Exception as e:
+        raise FileNotFoundError(f"File not found for {file_str}") from e

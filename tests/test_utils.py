@@ -7,6 +7,7 @@ from src.utils import (
     filter_label,
     calculate_accuracy_per_label,
     llm_label_parser,
+    file_finder,
 )
 
 
@@ -139,3 +140,16 @@ def test_llm_label_parser(mock_get_completion_from_messages):
         llm_label_parser(mock_get_completion_from_messages.return_value)
         == expected_label
     )
+
+
+@pytest.mark.correct
+def test_file_finder():
+    # Test case 1: File found
+    file_str = "Labels - https___doi.org_10.1093_ehr_cead103.xlsx"
+    expected_result = "Au_Nom_de_la_Patrie_Southern_Identities_and_Patriotic_Mobilisation_in_First_World_War_France.json"
+    assert file_finder(file_str) == expected_result
+
+    # Test case 2: File not found
+    file_str = "Labels - https___doi.org_10.1093_ehr_ceadxxx.xlsx"
+    with pytest.raises(FileNotFoundError):
+        file_finder(file_str)

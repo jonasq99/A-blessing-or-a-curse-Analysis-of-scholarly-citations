@@ -68,7 +68,7 @@ def run(preceeding_context: int, suceeding_context: int):
 
 def run_configs(
     configs: list[tuple[int, int]],
-    file_path: str = "../impact_cite_test_results/run_2.csv",
+    file_path: str = "./impact_cite_test_results/run_2.csv",
 ):
     if os.path.exists(file_path):
         os.remove(file_path)

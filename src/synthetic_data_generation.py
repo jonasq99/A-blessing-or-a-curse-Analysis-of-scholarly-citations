@@ -32,8 +32,8 @@ if __name__ == "__main__":
     # "synthetic_data/A_Colonial_Celebrity_in_the_New_Attention_Economy_Cecil_Rhodess_Cape-to-Cairo_Telegraph_and_Railway_Negotiations_in_1899.csv"
 
     filename = "A_Colonial_Celebrity_in_the_New_Attention_Economy_Cecil_Rhodess_Cape-to-Cairo_Telegraph_and_Railway_Negotiations_in_1899.json"
-    filepath = "../all_data_articles/"
-    synthetic_filepath = "../synthetic_data/"
+    filepath = "./all_data_articles/"
+    synthetic_filepath = "./synthetic_data/"
 
     def generate_synthetic_data(filepath: str, filename: str, synthetic_filepath: str):
 

@@ -1,7 +1,8 @@
 import json
 from pathlib import Path
 import pandas as pd
-from .text_extraction import file_finder, TextExtraction
+from .text_extraction import TextExtraction
+from .utils import file_finder
 
 
 def footnote_to_int(footnote_number) -> int:
