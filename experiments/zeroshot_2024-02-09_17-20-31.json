@@ -1,0 +1,9 @@
+{
+    "description": "Zeroshot evaluation on 100 opinionated samples and 100 random neutral samples from the test set",
+    "datetime": "2024-02-09_17:20:31",
+    "metrics": {
+        "f1": 0.6712802768166091,
+        "acc neutral": 0.07,
+        "acc opinionated": 0.9797979797979798
+    }
+}

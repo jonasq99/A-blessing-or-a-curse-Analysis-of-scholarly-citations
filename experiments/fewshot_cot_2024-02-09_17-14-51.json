@@ -1,0 +1,9 @@
+{
+    "description": "Fewshot COT evaluation on 100 opinionated samples and 100 random neutral samples from the test set",
+    "datetime": "2024-02-09 17:14:51",
+    "metrics": {
+        "f1": 0.6403940886699507,
+        "acc neutral": 0.61,
+        "acc opinionated": 0.6565656565656566
+    }
+}
