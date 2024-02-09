@@ -8,7 +8,6 @@ import re
 from flair.data import Sentence
 from fuzzywuzzy import fuzz
 
-
 SPLITT_PATTERN = re.compile("; see |; | . See also | .See also |. See |, see")
 
 
@@ -32,7 +31,6 @@ def load_annotations(file_str: str) -> pd.DataFrame:
 
 
 def format_author_name(name):
-    # TODO: probably need to handle more cases
     if name is None:
         return None
     if " and " in name:
@@ -175,7 +173,6 @@ def calculate_similarity(str1, str2):
     # return SequenceMatcher(None, str1, str2).ratio()
 
     # https://pypi.org/project/fuzzywuzzy/
-    # TODO: could also use token_sort_ratio since token_set_ratio might be too generous
     return fuzz.token_set_ratio(str1, str2) / 100
 
 
@@ -231,8 +228,6 @@ def evaluate_extraction(set1, set2, threshold=0.95):
     return precision, recall, f_score
 
 
-# TODO: implement a simple approach with a just regrex to extract the author and title, and a simple split with ";"
-
 
 def extract_citations(file_path: str, path="./all_data_articles") -> set:
     file_path = os.path.join(path, file_path)
@@ -275,7 +270,7 @@ def tagger_information_extraction(
 
     for footnote_number, footnote_text in tqdm(article["footnotes"].items()):
         # If the footnote is ibid, use the previous footnote
-        if footnote_text.startswith("Ibid"):
+        if footnote_text.startswith("Ibid")
             footnote_text = prev_footnote
 
         prev_footnote = footnote_text

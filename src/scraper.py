@@ -68,7 +68,7 @@ def scrape_article(soup, url):
     for paragraph in paragraphs:
         # Extract the text within the paragraph
         text = ""
-        #citations = []
+        # citations = []
         for element in paragraph.contents:
             if element.name == "a":
                 # Extract the citation number from the sup tag
@@ -149,7 +149,11 @@ def scrape_all(url):
 
 
 def save_data(data):
-    path = "all_data_articles/" + data["title"].repace("*", "").replace(" ", "_") + ".json"
+    path = (
+        "all_data_articles/"
+        + data["title"].replace("*", "").replace(" ", "_")
+        + ".json"
+    )
     with open(path, "w") as f:
         json.dump(data, f, indent=4)
 
