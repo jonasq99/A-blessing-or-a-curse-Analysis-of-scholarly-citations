@@ -51,12 +51,6 @@ def create_data(
                 article_dict,
                 previous_context_tokens=previous_context_tokens,
                 following_context_tokens=following_context_tokens,
-                previous_context_sentences=None,
-                following_context_sentences=None,
-                previous_whole_paragraph=False,
-                following_whole_paragraph=False,
-                till_previous_citation=None,
-                till_following_citation=None,
                 footnote_text=False,
                 footnote_mask=True,
             ).generate_context(footnote_number)

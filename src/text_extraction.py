@@ -1,9 +1,4 @@
-import pandas as pd
-import numpy as np
 import re
-import os
-import json
-import nltk
 
 
 class TextExtraction:
@@ -12,23 +7,11 @@ class TextExtraction:
         article_dict: dict,
         previous_context_tokens: int = None,
         following_context_tokens: int = None,
-        previous_context_sentences: int = None,
-        following_context_sentences: int = None,
-        previous_whole_paragraph: bool = None,
-        following_whole_paragraph: bool = None,
-        till_previous_citation: int = None,
-        till_following_citation: int = None,
         footnote_text: bool = True,
         footnote_mask: bool = True,
     ):
         self.previous_context_tokens = previous_context_tokens
         self.following_context_tokens = following_context_tokens
-        self.previous_context_sentences = previous_context_sentences
-        self.following_context_sentences = following_context_sentences
-        self.previous_whole_paragraph = previous_whole_paragraph
-        self.following_whole_paragraph = following_whole_paragraph
-        self.till_previous_citation = till_previous_citation
-        self.till_following_citation = till_following_citation
         self.footnote_text = footnote_text
         self.footnote_mask = footnote_mask
 
@@ -55,51 +38,6 @@ class TextExtraction:
             ),
         )
 
-        if self.previous_whole_paragraph:
-            start_index = max(0, self.article_text.rfind("\n", 0, start_index) + 1)
-
-        if self.following_whole_paragraph:
-            end_index = self.article_text.find("\n", end_index)
-
-        # TODO: maybe rework
-        # Include n amount of previous sentences
-        if self.previous_context_sentences:
-            sentences = nltk.sent_tokenize(self.article_text[:start_index])
-            start_index = max(
-                0,
-                start_index
-                - sum(
-                    len(sentence)
-                    for sentence in sentences[-self.previous_context_sentences :]
-                ),
-            )
-
-        # TODO: maybe rework
-        # Include n amount of following sentences
-        if self.following_context_sentences:
-            sentences = nltk.sent_tokenize(self.article_text[end_index:])
-            end_index = min(
-                len(self.article_text),
-                end_index
-                + sum(
-                    len(sentence)
-                    for sentence in sentences[: self.following_context_sentences]
-                ),
-            )
-
-        if self.till_previous_citation:
-            if footnote_number - self.till_previous_citation < 0:
-                start_index = 0
-            else:
-                start_index = self.article_text.find(
-                    f"[CITATION-{footnote_number-self.till_previous_citation}]"
-                ) + len(f"[CITATION-{footnote_number-self.till_previous_citation}]")
-
-        if self.till_following_citation:
-            end_index = self.article_text.find(
-                f"[CITATION-{footnote_number+self.till_following_citation}]"
-            )
-
         context = self.article_text[start_index:end_index].strip()
 
         # Apply footnote mask if required
@@ -120,7 +58,7 @@ class TextExtraction:
             if match.group(1) == str(footnote_number):
                 return match.group(0)
             else:
-                return "[MASK]"  # TODO: clarify if we should use empty string instead
+                return "[MASK]"
 
         replaced_text = re.sub(citation_pattern, replacer, text)
         return replaced_text
