@@ -1,1 +1,0 @@
-# make test_fs_cot
