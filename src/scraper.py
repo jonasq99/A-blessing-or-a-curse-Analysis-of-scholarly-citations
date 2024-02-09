@@ -68,7 +68,6 @@ def scrape_article(soup, url):
     for paragraph in paragraphs:
         # Extract the text within the paragraph
         text = ""
-        # citations = []
         for element in paragraph.contents:
             if element.name == "a":
                 # Extract the citation number from the sup tag
