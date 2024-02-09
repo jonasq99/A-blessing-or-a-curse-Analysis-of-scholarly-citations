@@ -15,3 +15,10 @@
    ```
    This will generate a file in the `results/<extraction-method>` directory with the same name as the input file but with the `.csv` extension. 
    This file contains the results of the analysis, hence the footnote number, author, title and the prediction.
+
+## Running individual scripts
+Individual scripts should be executed with the -m option since the project uses relative imports
+For example:
+```bash
+   python -m src.fewshot_cot_classification
+   ```
