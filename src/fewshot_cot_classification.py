@@ -77,6 +77,7 @@ if __name__ == "__main__":
     df = pd.concat([opinionated_data, neutral_data], ignore_index=True)
 
     y_pred = get_predictions(df)
+    df["predictiosn"] = y_pred
     df.to_csv(
         f"./experiments/fewshot_cot_predictions_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.csv",
         index=False,
