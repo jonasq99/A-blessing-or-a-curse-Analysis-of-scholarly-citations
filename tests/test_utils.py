@@ -83,31 +83,31 @@ def test_calculate_accuracy_per_label():
     predictions = [1, 0, 1, 0, 1, None]
     labels = [1, 1, 0, 1, 0, 1]
     label_value = 1
-    expected_accuracy = 0.25
+    expected_accuracy = (0.25, 0.33)
     assert (
-        calculate_accuracy_per_label(predictions, labels, label_value)
-        == expected_accuracy
-    )
+        round(calculate_accuracy_per_label(predictions, labels, label_value)[0], 2),
+        round(calculate_accuracy_per_label(predictions, labels, label_value)[1], 2),
+    ) == expected_accuracy
 
     # testing for None value in predictions and prediction of None label set to opposite of label_value
     predictions = [1, 0, 1, 0, 0, 0]
     labels = [1, 1, 0, 1, None, 1]
     label_value = 1
-    expected_accuracy = 0.25
+    expected_accuracy = (0.25, 0.5)
     assert (
-        calculate_accuracy_per_label(predictions, labels, label_value)
-        == expected_accuracy
-    )
+        round(calculate_accuracy_per_label(predictions, labels, label_value)[0], 2),
+        round(calculate_accuracy_per_label(predictions, labels, label_value)[1], 2),
+    ) == expected_accuracy
 
     # testing for None value in predictions and prediction of None label set to label_value
     predictions = [1, 0, 1, 0, 1, 0]
     labels = [1, 1, 0, 1, None, 1]
     label_value = 1
-    expected_accuracy = 0.25
+    expected_accuracy = (0.25, 0.33)
     assert (
-        calculate_accuracy_per_label(predictions, labels, label_value)
-        == expected_accuracy
-    )
+        round(calculate_accuracy_per_label(predictions, labels, label_value)[0], 2),
+        round(calculate_accuracy_per_label(predictions, labels, label_value)[1], 2),
+    ) == expected_accuracy
 
 
 @patch("src.utils.get_completion_from_messages")
