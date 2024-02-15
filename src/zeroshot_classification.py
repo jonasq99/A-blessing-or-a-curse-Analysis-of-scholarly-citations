@@ -72,7 +72,8 @@ if __name__ == "__main__":
     y_pred = get_precictions_zs(df)
     df["predictions"] = y_pred
     df.to_csv(
-        f"./experiments/zeroshot_predictions_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.csv"
+        f"./experiments/zeroshot_predictions_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.csv",
+        index=False,
     )
     y_true = df["Label"].tolist()
 

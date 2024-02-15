@@ -78,7 +78,8 @@ if __name__ == "__main__":
 
     y_pred = get_predictions(df)
     df.to_csv(
-        f"./experiments/fewshot_cot_predictions_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.csv"
+        f"./experiments/fewshot_cot_predictions_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.csv",
+        index=False,
     )
     y_true = df["Label"].tolist()
 
