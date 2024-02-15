@@ -17,7 +17,7 @@ from .data_creator import create_data
 from .utils import calculate_accuracy_per_label, get_context
 
 logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+    level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s"
 )
 
 load_dotenv()
@@ -36,15 +36,18 @@ def tokenize_seqs(examples):
     )
 
 
-def run(preceeding_context: int, suceeding_context: int) -> dict:
+def run(
+    preceeding_context: int, suceeding_context: int, citation_only: bool = True
+) -> dict:
     df_dict = create_data(preceeding_context, suceeding_context)
 
     # concatenate context and footnote text, select relevant columns
     for d in df_dict:
+        if citation_only:
+            df_dict[d]["context"] = df_dict[d]["context"].apply(get_context)
+
         df_dict[d]["citation"] = (
-            get_context(df_dict[d]["context"])
-            + " [Footnote] "
-            + df_dict[d]["footnote_text"]
+            df_dict[d]["context"] + " [Footnote] " + df_dict[d]["footnote_text"]
         )
         df_dict[d] = df_dict[d].loc[:, ["Label", "citation"]]
         df_dict[d] = Dataset.from_pandas(df_dict[d])
