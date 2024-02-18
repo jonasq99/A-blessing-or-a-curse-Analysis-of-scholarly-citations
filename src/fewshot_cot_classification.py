@@ -77,16 +77,29 @@ if __name__ == "__main__":
     df = pd.concat([opinionated_data, neutral_data], ignore_index=True)
 
     y_pred = get_predictions(df)
+    df["predictiosn"] = y_pred
+    df.to_csv(
+        f"./experiments/fewshot_cot_predictions_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.csv",
+        index=False,
+    )
     y_true = df["Label"].tolist()
 
-    f1 = f1_score(y_pred, y_true)
+    f1_opinionated = f1_score(y_pred, y_true, pos_label=1)
+    f1_neural = f1_score(y_pred, y_true, pos_label=0)
     accuracy_label_0 = calculate_accuracy_per_label(y_pred, y_true, label_value=0)
     accuracy_label_1 = calculate_accuracy_per_label(y_pred, y_true, label_value=1)
 
     metrics = {
-        "f1": f1,
-        "acc neutral": accuracy_label_0,
-        "acc opinionated": accuracy_label_1,
+        "neutral": {
+            "f1": f1_neural,
+            "recall": accuracy_label_0[0],
+            "precision": accuracy_label_0[1],
+        },
+        "opinionated": {
+            "f1": f1_opinionated,
+            "recall": accuracy_label_1[0],
+            "precision": accuracy_label_1[1],
+        },
     }
 
     results_to_json(metrics)

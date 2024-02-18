@@ -6,7 +6,7 @@ from openai import OpenAI
 from openai._types import NotGiven, NOT_GIVEN
 from dotenv import load_dotenv
 from pathlib import Path
-from sklearn.metrics import recall_score
+from sklearn.metrics import precision_score, recall_score
 
 load_dotenv()
 
@@ -194,14 +194,16 @@ def sample_data(dataframe: pd.DataFrame, num_rand_samples: int = 100) -> pd.Data
     return sampled_df
 
 
-def calculate_accuracy_per_label(predictions, labels, label_value: int) -> float:
+def calculate_accuracy_per_label(
+    predictions, labels, label_value: int
+) -> tuple[float, float]:
     """
     input:
         n-dim array of model predictions
         n-dim array of labels
         label_value: int specifying the label to calculate the accuracy for
     ourtput:
-        float: accuracy for the specified label
+        tuple[float, float] of the recall and precision for the specified label
     """
     if label_value == 1:
         opposite_label = 0
@@ -209,7 +211,9 @@ def calculate_accuracy_per_label(predictions, labels, label_value: int) -> float
         opposite_label = 1
     y_pred = [opposite_label if p is None else p for p in predictions]
     y_true = [opposite_label if l is None else l for l in labels]
-    return recall_score(y_true, y_pred, pos_label=label_value)
+    return recall_score(y_true, y_pred, pos_label=label_value), precision_score(
+        y_true, y_pred, pos_label=label_value
+    )
 
 
 def llm_label_parser(model_output: str) -> int:
