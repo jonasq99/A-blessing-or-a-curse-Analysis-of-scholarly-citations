@@ -14,7 +14,7 @@ import logging
 from pathlib import Path
 from tqdm import tqdm
 from .data_creator import create_data
-from .utils import calculate_accuracy_per_label, get_context
+from .utils import calculate_accuracy_per_label, filter_label, get_context, sample_data
 
 logging.basicConfig(
     level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s"
@@ -37,9 +37,17 @@ def tokenize_seqs(examples):
 
 
 def run(
-    preceeding_context: int, suceeding_context: int, citation_only: bool = True
+    preceeding_context: int,
+    suceeding_context: int,
+    citation_only: bool = True,
+    small_test_set: bool = True,
 ) -> dict:
     df_dict = create_data(preceeding_context, suceeding_context)
+
+    if small_test_set:
+        opinionated_data = filter_label(df_dict, 1)
+        neutral_data = sample_data(filter_label(df_dict, 0))
+        df_dict = {"opinionated": opinionated_data, "neutral": neutral_data}
 
     # concatenate context and footnote text, select relevant columns
     for d in df_dict:
@@ -92,7 +100,7 @@ def run(
 def results_to_json(metrics: dict, description: str = None, path: str = None):
     if path is None:
         path = Path(
-            f"./impact_cite_test_results/impact_cite_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.json"
+            f"./experiments/impact_cite_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.json"
         )
 
     if description is None:
@@ -110,7 +118,10 @@ if __name__ == "__main__":
     results, predictions = run(500, 0)
     df = pd.DataFrame(predictions)
     df.to_csv(
-        f"./impact_cite_test_results/impact_cite_predictions_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.csv",
+        f"./experiments/impact_cite_predictions_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.csv",
         index=False,
     )
-    results_to_json(results)
+    results_to_json(
+        results,
+        "ImpactCite evaluation on 100 opinionated and 100 neutral samples from test set",
+    )

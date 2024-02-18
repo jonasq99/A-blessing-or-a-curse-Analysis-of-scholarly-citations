@@ -1,0 +1,16 @@
+{
+    "description": "ImpactCite evaluation on 100 opinionated and 100 neutral samples from test set",
+    "datetime": "2024-02-18 12:27:32",
+    "metrics": {
+        "neutral": {
+            "f1": 0.6688963210702341,
+            "recall": 1.0,
+            "precision": 0.5025125628140703
+        },
+        "opinionated": {
+            "f1": 0.0,
+            "recall": 0.0,
+            "precision": 0.0
+        }
+    }
+}
