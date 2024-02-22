@@ -17,12 +17,13 @@ warnings.filterwarnings("ignore")
 
 if len(sys.argv) < 3:
     print(
-        """Missing information_extraction_method argument. 
-    
-    Usage: python main.py tagger_name filename
-    
-    information extraction method: anystyle, regex, tagger
-    filename: the name of the file in the folder all_data_articles
+        """
+        Missing arguments:
+
+        Usage: python main.py information_extraction_method filename
+        
+        information extraction method: anystyle, regex, tagger
+        filename: the name of the file in the folder all_data_articles
     """
     )
     sys.exit(1)
